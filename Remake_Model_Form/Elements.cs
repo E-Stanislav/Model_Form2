@@ -25,9 +25,17 @@ namespace _2d_graphics_d
         public  List<element> all_elements = new List<element>();
         public  Int64 count_of_elements; //число треугольников
 
+        public element All_elements
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
 
         //возвращает элемент с соответствующим номером
-        public  element get_element(Int32 i)
+        public element get_element(Int32 i)
         {
             return all_elements[i];
         }

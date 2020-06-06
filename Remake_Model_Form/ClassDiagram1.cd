@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="_2d_graphics_d.Data">
+    <Position X="0.5" Y="1.5" Width="3" />
+    <Members>
+      <Method Name="calculateS" Hidden="true" />
+      <Field Name="file_path" Hidden="true" />
+      <Method Name="getColorStress" Hidden="true" />
+      <Field Name="k" Hidden="true" />
+      <Field Name="lii" Hidden="true" />
+      <Field Name="mass" Hidden="true" />
+      <Field Name="mass_of_material" Hidden="true" />
+      <Field Name="MaxX" Hidden="true" />
+      <Field Name="MaxY" Hidden="true" />
+      <Method Name="min_max_size_img" Hidden="true" />
+      <Method Name="mydiv" Hidden="true" />
+      <Method Name="new_find_stress_in_el" Hidden="true" />
+      <Field Name="node_with_fofce" Hidden="true" />
+      <Field Name="point" Hidden="true" />
+      <Field Name="s" Hidden="true" />
+      <Method Name="stress_in_node" Hidden="true" />
+      <Field Name="xxx" Hidden="true" />
+    </Members>
+    <AssociationLine Name="Elements" Type="_2d_graphics_d.Elements">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.316" Y="0.06" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>MMAggIDEAQIiCBBQAAAQAAAAAACQBCAAgKIAgAAgAgQ=</HashCode>
+      <FileName>Data.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Nodes" />
+      <Property Name="Elements" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="_2d_graphics_d.node">
+    <Position X="8.25" Y="0.75" Width="1.5" />
+    <Members>
+      <Field Name="r_number" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAACAMQAAAAQAAAAAAAAAAAAAAAABgAAAAAgA=</HashCode>
+      <FileName>Nodes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="_2d_graphics_d.Nodes">
+    <Position X="4.75" Y="0.75" Width="2.5" />
+    <Members>
+      <Method Name="getnode" Hidden="true" />
+      <Field Name="numbers_f" Hidden="true" />
+      <Method Name="setStress" Hidden="true" />
+    </Members>
+    <AssociationLine Name="All_nodes" Type="_2d_graphics_d.node">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.268" Y="0.06" Height="0.182" Width="0.827" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>SAAAAAAAAAAAAAAAAAAAAAAAEAAAEAAAAQIAAAACEAA=</HashCode>
+      <FileName>Nodes.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="All_nodes" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="_2d_graphics_d.Elements">
+    <Position X="4.75" Y="3.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAACAAAAAgAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>Elements.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="All_elements" />
+    </ShowAsAssociation>
+  </Class>
+  <Struct Name="_2d_graphics_d.element">
+    <Position X="8.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAICAAQAAAQAAAAAAAIAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Elements.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

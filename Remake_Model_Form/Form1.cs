@@ -25,7 +25,7 @@ namespace OpenGLNamespace
         public static Form1 form;
         public string type_stress = "cpc";
         Size oldSize;
-
+        
 
         public Form1()
         {
@@ -52,10 +52,7 @@ namespace OpenGLNamespace
             e.FillRectangle(GBrush, rect);
         }*/
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
+        
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -284,7 +281,7 @@ namespace OpenGLNamespace
 
             //groupBox3.Left = Width - 328;
             //AnT.Width = Width - 463;
-            glControl1.Width = Width - 50;
+            glControl1.Width = Width;
             glControl1.Height = Height - 100;
             //AnT.Width = Width;
             //AnT.Height = Height;
@@ -383,6 +380,7 @@ namespace OpenGLNamespace
 
         private void button1_Click_2(object sender, EventArgs e)
         {
+            
             Bitmap scr = CopyColorBuffer();
             //Image scr = AnT.BackgroundImage;
 
@@ -419,10 +417,10 @@ namespace OpenGLNamespace
             return bmp;
         }
 
-        private void button2_Click_1(object sender, EventArgs e)
+        private void button2_Click_3(object sender, EventArgs e)
         {
             Form2 newform = new Form2();
-            button2.Enabled = false;
+            button3.Enabled = false;
             newform.Show();
         }
 
@@ -433,7 +431,8 @@ namespace OpenGLNamespace
                 simulation = new Simulation(glControl1);
                 oldSize = glControl1.Size;
                 timer1.Enabled = true;
-                simulation.setType1(1);
+                simulation.setType1(2);
+                
             }
             simulation.Update();
             simulation.Draw();
@@ -454,13 +453,11 @@ namespace OpenGLNamespace
             glControl1.SwapBuffers();
             glControl1.Invalidate();
             setText(new StringBuilder()
-                .Append(simulation.cam.mPos.x)
-                .Append(" ")
-                .Append(simulation.cam.mPos.y)
-                .Append(" ")
-                .Append(simulation.cam.mPos.z)
-                .Append(" ")
                 .Append(simulation.cam.len)
+                .Append(" ")
+                .Append(simulation.cam.a1)
+                .Append(" ")
+                .Append(simulation.cam.a2)
                 .ToString());
         }
 
@@ -496,5 +493,35 @@ namespace OpenGLNamespace
         }
 
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            Bitmap scr = CopyColorBuffer();
+            //Image scr = AnT.BackgroundImage;
+
+            //pictureBox1.Image = scr;
+            SaveFileDialog dlg = new SaveFileDialog();
+            //if (MainForm.PrScFilepath!="")
+            //{
+            //dlg.InitialDirectory = MainForm.PrScFilepath;
+            //}
+            dlg.Filter = "*.png|*.png|*.jpg; *.jpeg|*.jpg;*.jpeg|*.bmp|*.bmp|Все файлы|*.*";
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                //MainForm.PrScFilepath = dlg.InitialDirectory;
+                scr.Save(dlg.FileName, ImageFormat.Jpeg);
+            }
+        }
+
+        private void button1_Click_3(object sender, EventArgs e)
+        {
+            Form2 newform = new Form2();
+            button3.Enabled = false;
+            newform.Show();
+        }
     }
 }

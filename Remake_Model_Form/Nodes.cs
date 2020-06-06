@@ -25,11 +25,19 @@ namespace _2d_graphics_d
     public class Nodes
     {
         // здесь хранятся все узлы 
-        public  List<node> all_nodes = new List<node>();
-        public  Int32 count_of_nodes; //число узлов
+        public List<node> all_nodes = new List<node>();
+        public Int32 count_of_nodes; //число узлов
         //здесь хранятся номера узлов к которым приложены силы
-        public  List<int> numbers_f = new List<int>();
-        
+        public List<int> numbers_f = new List<int>();
+
+        public node All_nodes
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
         //
         // ищем узел по его координатам, возвращаем номер этого узла
         public Int32 findnode(Double x, Double y)
@@ -60,7 +68,7 @@ namespace _2d_graphics_d
 
         //ищет узел по его номеру, возвращает структуру узел; 
         // !!! если использовать этот метод с element.node, то передавать в метод (element.node-1)
-        public  node getnode(Int32 i)
+        public node getnode(Int32 i)
         {
             return all_nodes[i];
         }
@@ -69,7 +77,7 @@ namespace _2d_graphics_d
         {
             all_nodes[i].stress = stress;
         }
- 
 
+        
     }
 }

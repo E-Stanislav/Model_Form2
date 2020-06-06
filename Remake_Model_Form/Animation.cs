@@ -6,7 +6,7 @@ using _2d_graphics_d;
 
 namespace OpenGLNamespace
 {
-    class Animation
+    public class Animation
     {
         int len;
         double currentLen;
@@ -18,6 +18,14 @@ namespace OpenGLNamespace
         {
             set { this.dir = value; }
             get { return this.dir; }
+        }
+
+        public Simulation Simulation
+        {
+            get => default;
+            set
+            {
+            }
         }
 
         public Animation(Simulation simulation)
@@ -59,7 +67,6 @@ namespace OpenGLNamespace
                 node n3 = simulation.nodes.getnode(simulation.elements.get_element(i).node3 - 1);
 
                 simulation.getH(i, ref h1, ref h2, ref h3);
-
 
                     d[i, simulation.elements.get_element(i).node1 - 1] = (h1 - start[i, simulation.elements.get_element(i).node1 - 1]) / len;
 

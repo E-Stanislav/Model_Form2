@@ -13,71 +13,60 @@ using OpenTK.Graphics;
 
 namespace OpenGLNamespace
 {
-    public class TextRenderer //: IDisposable
+    public class TextRenderer : IDisposable
     {
         Bitmap bmp;
         Graphics gfx;
         int texture;
+        //Rectangle rectGFX;
         Rectangle dirty_region;
         bool disposed;
-        Font serif = new Font(FontFamily.GenericSerif, 24);
+        Font serif = new Font(FontFamily.GenericSerif, 99, FontStyle.Bold);
+        // Конструктор нового экземпляра класса
+        // width, height - ширина и высота растрового образа
 
-        #region Constructors
+      
 
-        /// <summary>
-        /// Constructs a new instance.
-        /// </summary>
-        /// <param name="width">The width of the backing store in pixels.</param>
-        /// <param name="height">The height of the backing store in pixels.</param>
+        public TextRenderer(): this(100, 100) { }
+
         public TextRenderer(int width, int height)
         {
-            if (width <= 0)
-                throw new ArgumentOutOfRangeException("width");
-            if (height <= 0)
-                throw new ArgumentOutOfRangeException("height ");
-            if (GraphicsContext.CurrentContext == null)
-                throw new InvalidOperationException("No GraphicsContext is current on the calling thread.");
+            if (GraphicsContext.CurrentContext == null) throw new InvalidOperationException("GraphicsContext не обнаружен");
+            try
+            {
+                bmp = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                gfx = Graphics.FromImage(bmp);
+                // Используем сглаживание
+                gfx.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+                texture = GL.GenTexture();
+                GL.BindTexture(TextureTarget.Texture2D, texture);
+                // Свойства текстуры
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToBorder);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToBorder);
+                // Создаем пустую тектсуру, которую потом пополним растровыми данымми с текстом (см.
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba,
+                    width, height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
 
-            bmp = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            gfx = Graphics.FromImage(bmp);
-            gfx.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-
-            texture = GL.GenTexture();
-            GL.BindTexture(TextureTarget.Texture2D, texture);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, width, height, 0,
-                PixelFormat.Rgba, PixelType.UnsignedByte, IntPtr.Zero);
+                Clear(Color.Transparent);
+                
+            } catch(Exception e) { }
         }
-
-        #endregion
-
-        #region Public Members
-
-        /// <summary>
-        /// Clears the backing store to the specified color.
-        /// </summary>
-        /// <param name="color">A <see cref="System.Drawing.Color"/>.</param>
+        // Заливка образа цветом color
         public void Clear(Color color)
         {
             gfx.Clear(color);
             dirty_region = new Rectangle(0, 0, bmp.Width, bmp.Height);
         }
 
-
         public void DrawString(string text, PointF point)
         {
             DrawString(text, serif, Brushes.Black, point);
         }
 
-        /// <summary>
-        /// Draws the specified string to the backing store.
-        /// </summary>
-        /// <param name="text">The <see cref="System.String"/> to draw.</param>
-        /// <param name="font">The <see cref="System.Drawing.Font"/> that will be used.</param>
-        /// <param name="brush">The <see cref="System.Drawing.Brush"/> that will be used.</param>
-        /// <param name="point">The location of the text on the backing store, in 2d pixel coordinates.
-        /// The origin (0, 0) lies at the top-left corner of the backing store.</param>
+        // Выводит строку текта text в точке point растрового образе, используя фонт font и цвета brush
+        // Начало координат растрового образа находится в его левом верхнем углу
         public void DrawString(string text, Font font, Brush brush, PointF point)
         {
             gfx.DrawString(text, font, brush, point);
@@ -86,12 +75,8 @@ namespace OpenGLNamespace
             dirty_region = Rectangle.Round(RectangleF.Union(dirty_region, new RectangleF(point, size)));
             dirty_region = Rectangle.Intersect(dirty_region, new Rectangle(0, 0, bmp.Width, bmp.Height));
         }
-
-        /// <summary>
-        /// Gets a <see cref="System.Int32"/> that represents an OpenGL 2d texture handle.
-        /// The texture contains a copy of the backing store. Bind this texture to TextureTarget.Texture2d
-        /// in order to render the drawn text on screen.
-        /// </summary>
+        // Получает обработчик texture (System.Int32) текструры, который связывается с TextureTarget.Texture2d
+        // см.в OnRenderFrame: GL.BindTexture(TextureTarget.Texture2D, renderer.Texture)
         public int Texture
         {
             get
@@ -100,12 +85,7 @@ namespace OpenGLNamespace
                 return texture;
             }
         }
-
-        #endregion
-
-        #region Private Members
-
-        // Uploads the dirty regions of the backing store to the OpenGL texture.
+        // Выгружеат растровые данные в текстуру OpenGL
         void UploadBitmap()
         {
             if (dirty_region != RectangleF.Empty)
@@ -124,11 +104,6 @@ namespace OpenGLNamespace
                 dirty_region = Rectangle.Empty;
             }
         }
-
-        #endregion
-
-        #region IDisposable Members
-
         void Dispose(bool manual)
         {
             if (!disposed)
@@ -137,26 +112,25 @@ namespace OpenGLNamespace
                 {
                     bmp.Dispose();
                     gfx.Dispose();
-                    if (GraphicsContext.CurrentContext != null)
-                        GL.DeleteTexture(texture);
+                    if (GraphicsContext.CurrentContext != null) GL.DeleteTexture(texture);
                 }
-
                 disposed = true;
             }
         }
-
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        [System.Runtime.InteropServices.DllImport("Kernel32")]
+        private extern static bool CloseHandle(IntPtr handle);
+
         ~TextRenderer()
         {
-            Console.WriteLine("[Warning] Resource leaked: {0}.", typeof(TextRenderer));
+            Dispose(true);
         }
 
-        #endregion
     }
 
     public class Simulation //основной класс
@@ -215,6 +189,7 @@ namespace OpenGLNamespace
 
         bool showYellow;
 
+
         Color backgroundColor = Color.White;
         public Color BackgroundColor
         {
@@ -224,6 +199,12 @@ namespace OpenGLNamespace
 
         double forceScale;
         Double ZeroZone;
+        public Vector3 point;
+        public float pointRadius = 4.0f;
+        bool showPoint;
+        public Double myMouseXcoordVar;
+        public Double myMouseXcoord;
+        public bool mouseMove;
 
         public Simulation(GLControl AnT)//констуркор тут инициализация
         {
@@ -245,7 +226,7 @@ namespace OpenGLNamespace
             animation = new Animation(this);
             //mouseDown = false;
             //a = 0;
-            scale = 0.005;
+            scale = 0.01;
             scale2d = 4;
 
             /*xAngle = 20;
@@ -272,52 +253,75 @@ namespace OpenGLNamespace
 
             animationXY = new AnimationXY(data);
             blink = new Blink(data);
-            textRenderer = new TextRenderer(8, 13);
+            // textRenderer = new TextRenderer(8, 13);
             // Glut.glutInit();
             // Glut.glutInitDisplayMode(Glut.GLUT_RGB | Glut.GLUT_DOUBLE | Glut.GLUT_DEPTH);
             init3d();
+            GL.BlendFunc(0, BlendingFactorSrc.SrcAlpha,
+                    BlendingFactorDest.OneMinusSrcAlpha);
+
         }
 
 
         public void init3d()//инициализируем 3д
         {
-            cam = new MyCamera();
+            if (cam == null)
+            {
+                cam = new MyCamera();
+            }
+            if (Form2.form2 != null)
+            {
+                Form2.form2.setComboBoxTo3D();
+            }
+            showPoint = false;
             //cam.Position_Camera(0, 5, -10, 0, 0, 0, 0, 1, 0);
             // очитка окна
             GL.ClearColor(BackgroundColor);
-
+            
             // установка порта вывода в соотвествии с размерами элемента anT
             GL.Viewport(0, 0, AnT.Width, AnT.Height);
 
 
             // настройка проекции
-            GL.MatrixMode(MatrixMode.Projection);
+            GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
             //Glu.gluP
-            double zNear = 1000;
+            double zNear = 0.01;
             double zFar = 3000;
             double degrees = 60;
             double aspect = (float)AnT.Width / (float)AnT.Height;
             double fH = Math.Tan(degrees / 360.0 * Math.PI) * zNear;
             double fW = fH * aspect;
-            GL.Frustum(-fW, fW, -fH, fH, zNear, zFar);
+            // GL.Frustum(-fW, fW, -fH, fH, zNear, zFar);
             // Glu.gluPerspective(60, (float)AnT.Width / (float)AnT.Height, 0.5, 3000);
-            GL.MatrixMode(MatrixMode.Modelview);
+            // GL.MatrixMode(MatrixMode.Modelview);
+            // GL.LoadIdentity();
+
+            Matrix4 p = Matrix4.CreatePerspectiveFieldOfView(((float) Math.PI) / 2.0f,
+                    (float)AnT.Width / (float)AnT.Height, (float) zNear, (float) zFar);
+            GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
+            GL.LoadMatrix(ref p);
 
             // настройка параметров OpenGL для визуализации
+            cam.update();
             GL.Enable(EnableCap.DepthTest);
             float maxX = (float) nodes.all_nodes.Select((node) => node.x).Max();
             float maxY = (float) nodes.all_nodes.Select((node) => node.y).Max();
-            // cam.setLookAt(((float) (maxX * scale)), ((float)(maxY * scale)));
+            cam.setLookAt(((float) (maxX * scale)), ((float)(maxY * scale)));
         }
 
         public void init2d()//инициализируем 2д
         {
+            
+            if (Form2.form2 != null)
+            {
+                Form2.form2.setComboBoxTo2D();
+            }
             singlePointX = -1;
             singlePointX = -1;
-            x0 = 20;
-            y0 = 20;
+            // x0 = 20;
+            // y0 = 20;
             //Glut.glutInit();
             // инициализация режима окна
             //Glut.glutInitDisplayMode(Glut.GLUT_RGB | Glut.GLUT_DOUBLE | Glut.GLUT_DEPTH);
@@ -326,7 +330,7 @@ namespace OpenGLNamespace
             // устанавливаем порт вывода, основываясь на размерах элемента управления AnT
             GL.Viewport(0, 0, AnT.Width, AnT.Height);
             // устанавливаем проекционную матрицу
-            GL.MatrixMode(MatrixMode.Projection);
+            GL.MatrixMode(MatrixMode.Modelview);
             // очищаем ее
             GL.LoadIdentity();
 
@@ -334,11 +338,12 @@ namespace OpenGLNamespace
             // Glu.gluOrtho2D(0.0, AnT.Width, 0.0, AnT.Height);
             //Glu.gluOrtho2D(0.0, 30.0 * (float)AnT.Width / (float)AnT.Height, 0.0, 30.0);
             // переходим к объектно-видовой матрице
-            GL.MatrixMode(MatrixMode.Modelview);
+            GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             //ProgrammDrawingEngine = new anEngine(AnT.Width, AnT.Height, AnT.Width, AnT.Height);
+            
         }
-        public void LoadData(string path)//грузим даннеы
+        public void LoadData(string path)//грузим данныe
         {
             data = new Data();
             Data.file_path = path;
@@ -359,9 +364,29 @@ namespace OpenGLNamespace
 
         public void Update()//для поворотомв мышкой
         {
-            cam.mouse_Events(AnT);
+            if (type1 != 2)
+            {
+                cam.mouse_Events(AnT);
+            } else
+            {
+                if (mouseMove)
+                {
+                    double dif = myMouseXcoord - myMouseXcoordVar;
+                    if (dif != 0)
+                    {
+                        scale2d -= ((float)(dif / 20));
+                        if (scale2d < 0.001f)
+                        {
+                            scale2d = 0.001f;
+                        }
+                    }
+                }
+                myMouseXcoordVar = myMouseXcoord;
+            }
             cam.update();
         }
+
+
 
         public void Draw()//рисуем
         {
@@ -418,6 +443,23 @@ namespace OpenGLNamespace
                     DrawZones();
                 }
             }
+
+            if (showPoint)
+            {
+                GL.Disable(EnableCap.PolygonOffsetFill);
+                //GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                var color = Color.FromArgb(128, Color.Yellow);
+                GL.Enable(EnableCap.Blend);
+                GL.DepthMask(false);
+                GL.Color4(color);
+                /*Console.WriteLine(color.R + "  " + color.G + " " + color.B
+                    + " " + color.A);*/
+                drawSphere(point.X, point.Y, point.Z, pointRadius);
+                GL.Disable(EnableCap.Blend);
+                GL.DepthMask(true);
+                //GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+            }
+
             GL.PopMatrix();
             GL.Flush();
             AnT.Invalidate();
@@ -448,22 +490,22 @@ namespace OpenGLNamespace
             }
             if ((singlePointX != -1) && (singlePointY != -1))
             {
+                GL.Color4(Color.FromArgb(128, Color.Yellow));
+                GL.Enable(EnableCap.Blend);
                 GL.Begin(BeginMode.Polygon);
                 for (int i = 0; i < 360; i++)
                 {
-                    float l = 4;
+                    float l = pointRadius;
                     float x = (float)(singlePointX + l * Math.Cos(i));
                     float y = (float)(singlePointY + l * Math.Sin(i));
                     GL.Vertex2(x, y);
 
                 }
                 GL.End();
+                GL.Disable(EnableCap.Blend);
             }
 
             DrawTriangles();
-
-
-
 
             GL.Flush();
             AnT.Invalidate();
@@ -474,42 +516,47 @@ namespace OpenGLNamespace
         {
             int a = 10;
             int b = 5;
-            const int len = 120;
+            double maxX = data.temp_nodes.all_nodes.Select(node => node.x).Max();
+            double maxY = data.temp_nodes.all_nodes.Select(node => node.y).Max();
+            double xlen = maxX + 20;
+            double ylen = maxY + 20;
+            const int zlen = 40;
             GL.Enable(EnableCap.LineSmooth);
             GL.Begin(BeginMode.Lines);  // указываем, что будем рисовать
             //GL.glLineWidth(0.88f);
             GL.Color3(0, 0, 0);
             GL.Vertex3(0, 0, 0);
-            GL.Vertex3(0, len, 0);
+            GL.Vertex3(0, zlen, 0);
             GL.Vertex3(0, 0, 0);
-            GL.Vertex3(-len, 0, 0);
+            GL.Vertex3(-xlen, 0, 0);
             GL.Vertex3(0, 0, 0);
-            GL.Vertex3(0, 0, len);
+            GL.Vertex3(0, 0, ylen);
             GL.End();
 
             GL.Begin(BeginMode.Triangles);  // указываем, что будем рисовать
             //GL.glLineWidth(0.88f);
             GL.Color3(0, 0, 0);
 
-            GL.Vertex3(0, len, 0);
-            GL.Vertex3(b, len - a, 0);
-            GL.Vertex3(-b, len - a, 0);
+            GL.Vertex3(0, zlen, 0);
+            GL.Vertex3(b, zlen - a, 0);
+            GL.Vertex3(-b, zlen - a, 0);
 
-            GL.Vertex3(-len, 0, 0);
-            GL.Vertex3(-len + a, 0, b);
-            GL.Vertex3(-len + a, 0, -b);
+            GL.Vertex3(-xlen, 0, 0);
+            GL.Vertex3(-xlen + a, 0, b);
+            GL.Vertex3(-xlen + a, 0, -b);
 
-            GL.Vertex3(0, 0, len);
-            GL.Vertex3(b, 0, len - a);
-            GL.Vertex3(-b, 0, len - a);
+            GL.Vertex3(0, 0, ylen);
+            GL.Vertex3(b, 0, ylen - a);
+            GL.Vertex3(-b, 0, ylen - a);
 
             GL.End();
 
             GL.Disable(EnableCap.LineSmooth);
 
-            DrawString3d("Y", 0, len, 0);
-            DrawString3d("X", -len, 0, 0);
-            DrawString3d("Z", 0, 0, len);
+            DrawString3d("Y", 0, zlen + 1, 0);
+            DrawString3d("X", ((int) -xlen - 1), 0, 0);
+            DrawString3d("Z", 0, 0, ((int) ylen + 1));
+            //GL.BindTexture(TextureTarget.Texture3D, textRenderer.Texture);
         }
 
         public void DrawCoor2d()//координатную систему в 2д
@@ -545,22 +592,65 @@ namespace OpenGLNamespace
 
         public void DrawString3d(string str, int x, int y, int z)//надписьт в 3д
         {
+            GL.Enable(EnableCap.Blend);
             GL.RasterPos3(x, z, y);
             for (int i = 0; i < str.Length; i++)
             {
-                textRenderer.DrawString(str[i].ToString(), new PointF(x, y));
+                textRenderer = new TextRenderer();
+                textRenderer.DrawString(str, new PointF(x, y));
+
+                float Size = 16;
+                GL.Color3(Color.Transparent);
+                GL.Enable(EnableCap.Texture2D);
+                GL.BindTexture(TextureTarget.Texture2D, textRenderer.Texture);
+                // Вывод квадрата с текстурой, содержащей текст (три строки)
+                GL.Begin(PrimitiveType.Quads);
+                GL.TexCoord3(x, y + Size, z);
+                GL.Vertex3(x - Size, y - Size, z);
+                GL.TexCoord3(x + Size, y + Size, z);
+                GL.Vertex3(x + Size, y - Size, z);
+                GL.TexCoord3(x + Size, y, z);
+                GL.Vertex3(x + Size, y + Size, z);
+                GL.TexCoord3(x, y, z);
+                GL.Vertex3(x - Size, y + Size, z);
+                GL.End();
+                GL.Disable(EnableCap.Texture2D);
                 // Glut.utBitmapCharacter(Glut.UT_BITMAP_8_BY_13, str[i]);
+                textRenderer.Dispose();
             }
+            GL.Disable(EnableCap.Blend);
         }
+
         public void DrawString2d(string str, int x, int y)//надпись в 2д
         {
-            GL.Color3(0, 0, 0);
-            GL.RasterPos2(x, y);
-            for (int i = 0; i < str.Length; i++)
-            {
-                textRenderer.DrawString(str[i].ToString(), new PointF(x, y));
-                // Glut.utBitmapCharacter(Glut.UT_BITMAP_8_BY_13, str[i]);
-            }
+            GL.Enable(EnableCap.Blend);
+            // GL.Color3(0, 0, 0);
+            // GL.RasterPos2(x, y);
+            //for (int i = 0; i < str.Length; i++)
+            //{
+            textRenderer = new TextRenderer();
+            textRenderer.DrawString(str, new PointF(x, y));
+
+            float Size = 16;
+            GL.Enable(EnableCap.Texture2D);
+            GL.Color3(Color.Transparent);
+            GL.BindTexture(TextureTarget.Texture2D, textRenderer.Texture);
+            // Вывод квадрата с текстурой, содержащей текст (три строки)
+            GL.Begin(PrimitiveType.Quads);
+            GL.TexCoord2(x, y + Size);
+            GL.Vertex2(x - Size, y - Size);
+            GL.TexCoord2(x + Size, y + Size);
+            GL.Vertex2(x + Size, y - Size);
+            GL.TexCoord2(x + Size, y);
+            GL.Vertex2(x + Size, y + Size);
+            GL.TexCoord2(x, y);
+            GL.Vertex2(x - Size, y + Size);
+            GL.End();
+            GL.Disable(EnableCap.Texture2D);
+            GL.Disable(EnableCap.Blend);
+            textRenderer.Dispose();
+            // Glut.utBitmapCharacter(Glut.UT_BITMAP_8_BY_13, str[i]);
+            //}
         }
 
 
@@ -826,7 +916,7 @@ namespace OpenGLNamespace
 
             GL.PushMatrix();
             GL.Translate(-n.x, getStartHeight() + 3, n.y);
-            drawSphere(1, 109, 108);
+            drawSphere(-n.x * scale, -5, n.y * scale, 0.5);
             // Glut.glutSolidSphere(1, 109, 109);
             GL.PopMatrix();
         }
@@ -885,7 +975,7 @@ namespace OpenGLNamespace
 
             GL.PushMatrix();
             GL.Translate(-n.x, getStartHeight() + 3, n.y);
-            drawSphere(1, 109, 109);
+            drawSphere(-n.x * scale, -5, n.y * scale, 0.5);
             GL.PopMatrix();
         }
 
@@ -903,7 +993,7 @@ namespace OpenGLNamespace
             GL.PushMatrix();
             GL.Translate(-n.x, getStartHeight() + 4, n.y);
             //Glut.glutSolidCone(1, 20, 2, 2);
-            drawSphere(1.5, 109, 109);
+            drawSphere(-n.x * scale, -5, n.y * scale, 1.5);
             GL.PopMatrix();
         }
 
@@ -1151,7 +1241,6 @@ namespace OpenGLNamespace
                 h1 = getStartHeight();
                 h2 = getStartHeight();
                 h3 = getStartHeight();
-                return;
             }
 
             if (type1 == 3)
@@ -1165,7 +1254,6 @@ namespace OpenGLNamespace
                     h2 = n2.movX * 1000;
                     h3 = n3.movX * 1000;
 
-                    return;
                 }
 
                 if (type2 == 2)
@@ -1177,7 +1265,6 @@ namespace OpenGLNamespace
                     h2 = n2.movY * 1000;
                     h3 = n3.movY * 1000;
 
-                    return;
                 }
 
                 if ((type2 >= 3) && (type2 <= 9))
@@ -1186,7 +1273,6 @@ namespace OpenGLNamespace
                     h1 = elem.stress[type2 - 3] / 1000;
                     h2 = elem.stress[type2 - 3] / 1000;
                     h3 = elem.stress[type2 - 3] / 1000;
-                    return;
                 }
 
                 if (type2 == 10)
@@ -1200,7 +1286,6 @@ namespace OpenGLNamespace
                     h2 = (1 - (s / data.s)) * 200 - 180;
                     h3 = (1 - (s / data.s)) * 200 - 180;
                     //MessageBox.Show(h1.ToString());
-                    return;
                 }
 
                 if (type2 == 11)
@@ -1208,10 +1293,12 @@ namespace OpenGLNamespace
                     h1 = Data.mass_of_material[elements.get_element(i).material - 1].TS * 10;
                     h2 = Data.mass_of_material[elements.get_element(i).material - 1].TS * 10;
                     h3 = Data.mass_of_material[elements.get_element(i).material - 1].TS * 10;
-                    return;
                 }
             }
 
+            h1 /= 5.0;
+            h2 /= 5.0;
+            h3 /= 5.0;
         }
 
         public void addScale()//масштаб
@@ -1238,23 +1325,60 @@ namespace OpenGLNamespace
             }
         }
 
-        public void showCoordinates2d(int x, int y)//показываем координаты
+        public void showCoordinates2d(double xt, double yt)//показываем координаты
         {
-            y = AnT.Height - y;
-            double xt = (x - x0) / scale2d;
-            double yt = (y - y0) / scale2d;
 
-            singlePointX = x;
-            singlePointY = y;
+            if (Form2.form2 != null)
+            {
+                Form2.form2.textBox1.Text = Math.Round(xt, 2).ToString();
+                Form2.form2.textBox2.Text = Math.Round(yt, 2).ToString();
+                //Form1.form.textBox1.Text = Math.Round(xt,2).ToString();
+                //Form1.form.textBox2.Text = Math.Round(yt,2).ToString();
+                make_stress_for_form(Form1.form.type_stress, xt, yt);
 
-            Form2.form2.textBox1.Text = Math.Round(xt, 2).ToString();
-            Form2.form2.textBox2.Text = Math.Round(yt, 2).ToString();
-            //Form1.form.textBox1.Text = Math.Round(xt,2).ToString();
-            //Form1.form.textBox2.Text = Math.Round(yt,2).ToString();
-            make_stress_for_form(Form1.form.type_stress, xt, yt);
+                movement_for_form(xt, yt);
+                propertys_of_ke(xt, yt);
+            }
+        }
+        public static Vector3 UnProject(Vector3 mouse, Matrix4 projection, Matrix4 view, Size viewport)
+        {
+            Vector4 vec;
+            /*Console.WriteLine(projection.M11 + " " + projection.M12 + " " + projection.M13 + " " + projection.M14);
+            Console.WriteLine(projection.M21 + " " + projection.M22 + " " + projection.M23 + " " + projection.M24);
+            Console.WriteLine(projection.M31 + " " + projection.M32 + " " + projection.M33 + " " + projection.M34);
+            Console.WriteLine(projection.M41 + " " + projection.M42 + " " + projection.M43 + " " + projection.M44);
+            Console.WriteLine(view.M11 + " " + view.M12 + " " + view.M13 + " " + view.M14);
+            Console.WriteLine(view.M21 + " " + view.M22 + " " + view.M23 + " " + view.M24);
+            Console.WriteLine(view.M31 + " " + view.M32 + " " + view.M33 + " " + view.M34);
+            Console.WriteLine(view.M41 + " " + view.M42 + " " + view.M43 + " " + view.M44);
+            */
 
-            movement_for_form(xt, yt);
-            propertys_of_ke(xt, yt);
+            float x = 2.0f * mouse.X / (float)viewport.Width - 1;
+            float y = -(2.0f * mouse.Y / (float)viewport.Height - 1);
+            // Console.WriteLine(x + " " + y);
+            vec.X = x;
+            vec.Y = y;
+            vec.Z = mouse.Z;
+            vec.W = 1.0f;
+
+            Matrix4 viewInv = Matrix4.Invert(view);
+            Matrix4 projInv = Matrix4.Invert(projection);
+
+            Vector4.Transform(ref vec, ref projInv, out vec);
+            Vector4.Transform(ref vec, ref viewInv, out vec);
+
+            if (vec.W > 0.000001f || vec.W < -0.000001f)
+            {
+                vec.X /= vec.W;
+                vec.Y /= vec.W;
+                vec.Z /= vec.W;
+            }
+
+            vec.X += 1;
+
+            vec *= Matrix4.CreateRotationY((float) -(Math.PI / 3));
+
+            return vec.Xyz;
         }
 
         public void onMouseDown(MouseEventArgs e)//нажали на мышку
@@ -1264,14 +1388,49 @@ namespace OpenGLNamespace
             oldY = y;*/
             if (type1 == 2)
             {
-                showCoordinates2d(e.X, e.Y);
+                int y = AnT.Height - e.Y;
+                double xt = (e.X - x0) / (type1 == 2 ? scale2d : scale);
+                double yt = (y - y0) / (type1 == 2 ? scale2d : scale);
+
+                singlePointX = e.X;
+                singlePointY = y;
+                showCoordinates2d(xt, yt);
+            }
+            else
+            {
+                float x = e.X;
+                float y = e.Y;
+                int[] viewport = new int[4];
+                Matrix4 modelMatrix, projMatrix;
+
+                GL.GetFloat(GetPName.ModelviewMatrix, out modelMatrix);
+                GL.GetFloat(GetPName.ProjectionMatrix, out projMatrix);
+                GL.GetInteger(GetPName.Viewport, viewport);
+
+                Vector3 _start = UnProject(new Vector3(x, y, 0.0f), cam.matrix, modelMatrix, new Size(viewport[2], viewport[3]));
+                Vector3 _end = UnProject(new Vector3(x, y, 1.0f), cam.matrix, modelMatrix, new Size(viewport[2], viewport[3]));
+                Vector3 vector = _end - _start;
+                float k = -_start.Y / vector.Y;
+                Vector3 result = _start + (k * vector);
+                result /= 0.01f;
+                showPoint = true;
+                point = result;
+                
+
+
+            // Pass coordinates of point to a_Position
+                showCoordinates2d(-result.X, result.Z);
             }
 
             if (e.Button == MouseButtons.Left)
                 cam.mouseRotate = true; //Если нажата левая кнопка мыши
 
             if (e.Button == MouseButtons.Middle)
+            {
                 cam.mouseMove = true; //Если нажата средняя кнопка мыши
+                mouseMove = true;
+                myMouseXcoordVar = e.Y;
+            }
 
             cam.myMouseYcoord = e.X; //Передаем в нашу глобальную переменную позицию мыши по Х
             cam.myMouseXcoord = e.Y;
@@ -1282,6 +1441,7 @@ namespace OpenGLNamespace
             tempX0 = x0;
             tempY0 = y0;
 
+            myMouseXcoord = e.Y;
         }
 
         public void onMouseUp()//отпустили мышку
@@ -1290,7 +1450,7 @@ namespace OpenGLNamespace
             //mouseDown = false;
             cam.mouseRotate = false;
             cam.mouseMove = false;
-
+            mouseMove = false;
         }
 
         public void onMouseMove(int x, int y)//двигаем мышку
@@ -1313,6 +1473,7 @@ namespace OpenGLNamespace
 
             cam.myMouseXcoordVar = y;
             cam.myMouseYcoordVar = x;
+            myMouseXcoord = y;
 
 
 
@@ -1352,7 +1513,7 @@ namespace OpenGLNamespace
 
         public void setType2(int type)//задаем второй тип
         {
-            if (type == 2)
+            if (type1 == 2)
             {
                 init3d();
             }
@@ -1403,6 +1564,8 @@ namespace OpenGLNamespace
             Form3.form3.label7.Text = Convert.ToString(Convert.ToInt32(data.colorStressMin * 2 / 3.0));
 
             Form3.form3.setPictureBox();
+            Form3.form3.setPictureBox();
+            Form3.form3.setPictureBox();
         }
 
         public Double getStartHeight()//высота начальная
@@ -1431,7 +1594,16 @@ namespace OpenGLNamespace
 
             if (e.KeyCode == Keys.E)
                 scale2d -= 0.1f;
+            
 
+
+            /*
+             if (e.Button == MouseButtons.Left)
+                cam.mouseRotate = true; //Если нажата левая кнопка мыши
+
+            if (e.Button == MouseButtons.Middle)
+                cam.mouseMove = true; //Если нажата средняя кнопка мыши
+                */
         }
 
         public void startAnimationXY()//начинаем анимацию
@@ -1940,13 +2112,14 @@ namespace OpenGLNamespace
             textBox8.Text = Math.Round(Data.mass_of_material[el.material].TS, 2).ToString();*/
         }
 
-        private void drawSphere(double x0, double y0, double z0)
+        private void drawSphere(double x0, double y0, double z0, double r)
         {
             const float PI = 3.141592f;
             double x, y, z, alpha, beta; // Storage for coordinates and angles        
-            double radius = 60.0f;
+            double radius = r;
             int gradation = 20;
 
+            // Console.WriteLine("Sphere: " + x0 + " " + y0 + " " + z0);
             for (alpha = 0.0; alpha < PI; alpha += PI / gradation)
             {
                 GL.Begin(BeginMode.TriangleStrip);
@@ -1995,5 +2168,41 @@ namespace OpenGLNamespace
             animationXY.Dir = 1.0 / (1.0 + (11 - speed));
         }
 
+        ~Simulation() 
+        {
+            textRenderer.Dispose();
+        }
+
+        public MyCamera MyCamera
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public AnimationXY Animation_2D
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public Animation Animation_3D
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public Data Data
+        {
+            get => default;
+            set
+            {
+            }
+        }
     }
 }

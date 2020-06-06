@@ -7,13 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+
 using OpenGLNamespace;
+
 
 namespace Remake_Model_Form
 {
     public partial class Form2 : Form
     {
         public static Form2 form2;
+        
         public Form3 fom3 ;
         public Form2()
         {
@@ -22,8 +25,15 @@ namespace Remake_Model_Form
             form2.Text = "Проект" + " " + Form1.form.simulation.s + " " + "Панель инструментов" + " " + Form1.form.simulation.line1;
             fom3 = new Form3();
             Form1.form.simulation.grid_with_force();
-            setControlsEnabled(tabControl1.TabPages[1].Controls, false);
-            setControlsEnabled(tabControl1.TabPages[2].Controls, false);
+            if (Form1.form.simulation.type1 == 2)
+            {
+                comboBox1.SelectedIndex = 1;
+            } else
+            {
+                comboBox1.SelectedIndex = 0;
+            }
+            //setControlsEnabled(tabControl1.TabPages[1].Controls, false);
+            //setControlsEnabled(tabControl1.TabPages[2].Controls, false);
 
             //fom3 = new Form3();
         }
@@ -31,7 +41,22 @@ namespace Remake_Model_Form
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             Form1.form.simulation.setType1(comboBox1.SelectedIndex + 1);
-            if (comboBox1.SelectedIndex == 0)
+            if (comboBox1.Text == "2D")
+            {
+                
+                tabPage1.Parent = null;
+                tabPage4.Parent = tabControl1;
+
+            }
+            if (comboBox1.Text == "3D")
+            {
+
+                //tabControl1.TabPages[0].Size = new Size(303, 293);
+                tabPage1.Parent = tabControl1;
+                tabPage4.Parent = null;
+                //tabControl1.TabPages[3].w
+            }
+            /*if (comboBox1.SelectedIndex == 0)
             {
                 //tabControl1.TabPages[0].;
                 tabControl1.SelectedIndex = 0;
@@ -47,7 +72,7 @@ namespace Remake_Model_Form
 
                 setControlsEnabled(tabControl1.TabPages[1].Controls, true);
                 setControlsEnabled(tabControl1.TabPages[2].Controls, true);
-            }
+            }*/
             //setControlsEnabled(tabControl1.TabPages[1].Controls, false);
         }
 
@@ -174,7 +199,7 @@ namespace Remake_Model_Form
             {
                 radioButton17.Checked = false;
                 radioButton18.Checked = false;
-                Form1.form.simulation.getColorStress(-1);
+                // Form1.form.simulation.getColorStress(-1);
                 Form1.form.simulation.setType2(1);
             }
         }
@@ -185,7 +210,7 @@ namespace Remake_Model_Form
             {
                 radioButton17.Checked = false;
                 radioButton18.Checked = false;
-                Form1.form.simulation.getColorStress(-1);
+                // Form1.form.simulation.getColorStress(-1);
                 Form1.form.simulation.setType2(2);
             }
         }
@@ -196,7 +221,7 @@ namespace Remake_Model_Form
             {
                 radioButton17.Checked = false;
                 radioButton18.Checked = false;
-                Form1.form.simulation.getColorStress(-1);
+                // Form1.form.simulation.getColorStress(-1);
                 Form1.form.simulation.setType2(3);
             }
         }
@@ -207,7 +232,7 @@ namespace Remake_Model_Form
             {
                 radioButton17.Checked = false;
                 radioButton18.Checked = false;
-                Form1.form.simulation.getColorStress(-1);
+                // Form1.form.simulation.getColorStress(-1);
                 Form1.form.simulation.setType2(4);
             }
         }
@@ -218,7 +243,7 @@ namespace Remake_Model_Form
             {
                 radioButton17.Checked = false;
                 radioButton18.Checked = false;
-                Form1.form.simulation.getColorStress(-1);
+                // Form1.form.simulation.getColorStress(-1);
                 Form1.form.simulation.setType2(5);
             }
         }
@@ -229,7 +254,7 @@ namespace Remake_Model_Form
             {
                 radioButton17.Checked = false;
                 radioButton18.Checked = false;
-                Form1.form.simulation.getColorStress(-1);
+                // Form1.form.simulation.getColorStress(-1);
                 Form1.form.simulation.setType2(6);
             }
         }
@@ -240,7 +265,7 @@ namespace Remake_Model_Form
             {
                 radioButton17.Checked = false;
                 radioButton18.Checked = false;
-                Form1.form.simulation.getColorStress(-1);
+                // Form1.form.simulation.getColorStress(-1);
                 Form1.form.simulation.setType2(7);
             }
         }
@@ -251,7 +276,7 @@ namespace Remake_Model_Form
             {
                 radioButton17.Checked = false;
                 radioButton18.Checked = false;
-                Form1.form.simulation.getColorStress(-1);
+                // Form1.form.simulation.getColorStress(-1);
                 Form1.form.simulation.setType2(8);
             }
         }
@@ -262,7 +287,7 @@ namespace Remake_Model_Form
             {
                 radioButton17.Checked = false;
                 radioButton18.Checked = false;
-                Form1.form.simulation.getColorStress(-1);
+                // Form1.form.simulation.getColorStress(-1);
                 Form1.form.simulation.setType2(9);
             }
         }
@@ -272,11 +297,11 @@ namespace Remake_Model_Form
         
             if (radioButton17.Checked==true)
             {
-           
-            //radioButton17.Checked = true;
 
-            Form1.form.simulation.getColorStress(-1);
-            Form1.form.simulation.setType2(10);
+                //radioButton17.Checked = true;
+
+                // Form1.form.simulation.getColorStress(-1);
+                Form1.form.simulation.setType2(10);
             radioButton8.Checked = false;
             radioButton9.Checked = false;
             radioButton10.Checked = false;
@@ -293,9 +318,9 @@ namespace Remake_Model_Form
         {
             if (radioButton18.Checked == true)
             {
-                
 
-                Form1.form.simulation.getColorStress(-1);
+
+                // Form1.form.simulation.getColorStress(-1);
                 Form1.form.simulation.setType2(11);
                 radioButton8.Checked = false;
                 radioButton9.Checked = false;
@@ -312,19 +337,53 @@ namespace Remake_Model_Form
         private void radioButton19_CheckedChanged(object sender, EventArgs e)
         {
             Form1.form.type_stress = "cpc";
-            Form1.form.simulation.make_stress_for_form(Form1.form.type_stress, Convert.ToDouble(textBox1.Text), Convert.ToDouble(textBox2.Text));
+            double a = 0;
+            double b = 0;
+            try
+            {
+                a = Convert.ToDouble(textBox1.Text);
+            } catch(Exception e1) { }
+            try
+            {
+                b = Convert.ToDouble(textBox2.Text);
+            } catch(Exception e2) { }
+            Form1.form.simulation.make_stress_for_form(Form1.form.type_stress, a, b);
         }
 
         private void radioButton20_CheckedChanged(object sender, EventArgs e)
         {
             Form1.form.type_stress = "cm";
-            Form1.form.simulation.make_stress_for_form(Form1.form.type_stress, Convert.ToDouble(textBox1.Text), Convert.ToDouble(textBox2.Text));
+            double a = 0;
+            double b = 0;
+            try
+            {
+                a = Convert.ToDouble(textBox1.Text);
+            }
+            catch (Exception e1) { }
+            try
+            {
+                b = Convert.ToDouble(textBox2.Text);
+            }
+            catch (Exception e2) { }
+            Form1.form.simulation.make_stress_for_form(Form1.form.type_stress, a, b);
         }
 
         private void radioButton21_CheckedChanged(object sender, EventArgs e)
         {
             Form1.form.type_stress = "ke";
-            Form1.form.simulation.make_stress_for_form(Form1.form.type_stress, Convert.ToDouble(textBox1.Text), Convert.ToDouble(textBox2.Text));
+            double a = 0;
+            double b = 0;
+            try
+            {
+                a = Convert.ToDouble(textBox1.Text);
+            }
+            catch (Exception e1) { }
+            try
+            {
+                b = Convert.ToDouble(textBox2.Text);
+            }
+            catch (Exception e2) { }
+            Form1.form.simulation.make_stress_for_form(Form1.form.type_stress, a, b);
         }
 
         private void checkBox8_CheckedChanged(object sender, EventArgs e)
@@ -352,7 +411,7 @@ namespace Remake_Model_Form
 
         private void Form2_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Form1.form.button2.Enabled = true;
+            Form1.form.button3.Enabled = true;
             fom3.Hide();
         }
 
@@ -595,6 +654,46 @@ namespace Remake_Model_Form
             //{
             // Form1.form.simulation.BackgroundColor = colorDialog1.Color;
             //}
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        public void setComboBoxTo3D ()
+        {
+            comboBox1.SelectedItem = "3D";
+        }
+        public void setComboBoxTo2D()
+        {
+            comboBox1.SelectedItem = "2D";
+        }
+
+        private void trackBar3_Scroll(object sender, EventArgs e)
+        {
+            Form1.form.simulation.pointRadius = trackBar3.Value;
+        }
+
+        private void tabControl1_BindingContextChanged(object sender, EventArgs e)
+        {
+       
+        }
+
+        private void trackBar4_Scroll(object sender, EventArgs e)
+        {
+            Form1.form.simulation.pointRadius = trackBar4.Value;
+        }
+
+        [STAThread]
+        private void button2_Click(object sender, EventArgs e)
+        {
+
         }
 
         //private void checkBox1_CheckedChanged(object sender, EventArgs e)

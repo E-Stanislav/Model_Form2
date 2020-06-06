@@ -52,6 +52,22 @@ namespace _2d_graphics_d
 
         public double[] mass = new double[50];
 
+        public Nodes Nodes
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public Elements Elements
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
         public void openfile_res1()
         {
             double x;
@@ -203,7 +219,6 @@ namespace _2d_graphics_d
                 }
 
             }
-            Console.Write(111);
 
         }
 
@@ -609,12 +624,12 @@ namespace _2d_graphics_d
 
             }
 
-                node n = temp_nodes.all_nodes[elem.node1 - 1];
-                n.stress = stress[0];
-                 n = temp_nodes.all_nodes[elem.node2 - 1];
-                n.stress = stress[1];
-                 n = temp_nodes.all_nodes[elem.node3 - 1];
-                n.stress = stress[2];
+            node n = temp_nodes.all_nodes[elem.node1 - 1];
+            n.stress = stress[0];
+            n = temp_nodes.all_nodes[elem.node2 - 1];
+            n.stress = stress[1];
+            n = temp_nodes.all_nodes[elem.node3 - 1];
+            n.stress = stress[2];
 
         }
 
@@ -650,7 +665,7 @@ namespace _2d_graphics_d
 
             double p = (a + b + c) / 2;
 
-            return Math.Sqrt(p*(p-a)*(p-b)*(p-c)) ;
+            return Math.Sqrt(p * (p - a) * (p - b) * (p - c));
         }
 
         public void new_find_stress_in_el(int j)
@@ -718,9 +733,9 @@ namespace _2d_graphics_d
                 }
 
 
-                if (el.number==1173)
+                if (el.number == 1173)
                 {
-                    int q=0;
+                    int q = 0;
                     q++;
 
                 }
@@ -757,6 +772,7 @@ namespace _2d_graphics_d
 
             colorStressMax = temp_nodes.all_nodes[0].stress;
             colorStressMin = temp_nodes.all_nodes[0].stress;
+            Console.WriteLine(temp_nodes.all_nodes[0].stress);
 
             for (int i = 1; i < temp_nodes.all_nodes.Count; i++)
             {
@@ -771,7 +787,7 @@ namespace _2d_graphics_d
                 }
 
             }
-            
+
         }
 
     }

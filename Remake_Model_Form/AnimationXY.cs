@@ -7,7 +7,7 @@ using _2d_graphics_d;
 
 namespace OpenGLNamespace
 {
-    class AnimationXY
+    public class AnimationXY
     {
         int len;
         double currentLen;
@@ -32,6 +32,14 @@ namespace OpenGLNamespace
                 this.usingDir = value;
             }
             get { return this.usingDir; }
+        }
+
+        public Data Data
+        {
+            get => default;
+            set
+            {
+            }
         }
 
         public AnimationXY(Data data)

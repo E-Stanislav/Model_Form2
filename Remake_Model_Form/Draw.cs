@@ -7,8 +7,5 @@ using _2d_graphics_d;
 
 namespace OpenGLNamespace
 {
-    class Draw
-    {
 
-    }
 }

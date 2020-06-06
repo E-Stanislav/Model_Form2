@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="OpenGLNamespace.Animation">
+    <Position X="3.75" Y="3.5" Width="1.5" />
+    <Members>
+      <Method Name="Animation" Hidden="true" />
+      <Field Name="currentLen" Hidden="true" />
+      <Field Name="d" Hidden="true" />
+      <Field Name="dir" Hidden="true" />
+      <Property Name="Dir" Hidden="true" />
+      <Method Name="init" Hidden="true" />
+      <Field Name="len" Hidden="true" />
+      <Field Name="start" Hidden="true" />
+      <Method Name="updateLen" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAgAACCAAAAAAAAACIEAAAABAAAAAA=</HashCode>
+      <FileName>Animation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Simulation" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="OpenGLNamespace.AnimationXY">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <Members>
+      <Method Name="AnimationXY" Hidden="true" />
+      <Field Name="currentLen" Hidden="true" />
+      <Field Name="dir" Hidden="true" />
+      <Property Name="Dir" Hidden="true" />
+      <Field Name="dx" Hidden="true" />
+      <Field Name="dy" Hidden="true" />
+      <Method Name="init" Hidden="true" />
+      <Field Name="len" Hidden="true" />
+      <Method Name="Start" Hidden="true" />
+      <Field Name="startX" Hidden="true" />
+      <Field Name="startY" Hidden="true" />
+      <Method Name="Stop" Hidden="true" />
+      <Field Name="usingDir" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAQAAEAAACAAAAAgAACIAAAAAAAAADIAIAAQAAAABAA=</HashCode>
+      <FileName>AnimationXY.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Data" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="OpenGLNamespace.MyCamera">
+    <Position X="3.25" Y="0.5" Width="1.5" />
+    <Members>
+      <Method Name="addLen" Hidden="true" />
+      <Method Name="Look" Hidden="true" />
+      <Field Name="matrix" Hidden="true" />
+      <Method Name="mouse_Events" Hidden="true" />
+      <Field Name="mouseMove" Hidden="true" />
+      <Field Name="mouseRotate" Hidden="true" />
+      <Field Name="mPos" Hidden="true" />
+      <Field Name="mUp" Hidden="true" />
+      <Field Name="mView" Hidden="true" />
+      <Field Name="myMouseXcoord" Hidden="true" />
+      <Field Name="myMouseXcoordVar" Hidden="true" />
+      <Field Name="myMouseYcoord" Hidden="true" />
+      <Field Name="myMouseYcoordVar" Hidden="true" />
+      <Method Name="setLookAt" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AIAQkAAAAAAAAAAAEAGAASAAAIAQAsAgAIAAAQAEAAA=</HashCode>
+      <FileName>MyCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OpenGLNamespace.Simulation">
+    <Position X="0.75" Y="1" Width="1.5" />
+    <Members>
+      <Method Name="~Simulation" Hidden="true" />
+      <Method Name="addScale" Hidden="true" />
+      <Field Name="AnT" Hidden="true" />
+      <Field Name="backgroundColor" Hidden="true" />
+      <Property Name="BackgroundColor" Hidden="true" />
+      <Field Name="blink" Hidden="true" />
+      <Field Name="cam" Hidden="true" />
+      <Method Name="cm_m_stress_for_form" Hidden="true" />
+      <Field Name="colorType" Hidden="true" />
+      <Method Name="cps_m_stress_for_form" Hidden="true" />
+      <Method Name="Draw" Hidden="true" />
+      <Method Name="DrawBound1" Hidden="true" />
+      <Method Name="DrawBound10" Hidden="true" />
+      <Method Name="DrawBound11" Hidden="true" />
+      <Method Name="DrawBounds" Hidden="true" />
+      <Method Name="DrawBounds2d" Hidden="true" />
+      <Method Name="drawCone" Hidden="true" />
+      <Method Name="DrawCoor" Hidden="true" />
+      <Method Name="DrawCoor2d" Hidden="true" />
+      <Field Name="drawNumberOfElement" Hidden="true" />
+      <Field Name="drawNumberOfNode" Hidden="true" />
+      <Field Name="drawNumberOfProperty" Hidden="true" />
+      <Method Name="DrawPrism" Hidden="true" />
+      <Method Name="Drawprism2d" Hidden="true" />
+      <Method Name="drawSphere" Hidden="true" />
+      <Method Name="DrawString2d" Hidden="true" />
+      <Method Name="DrawString3d" Hidden="true" />
+      <Method Name="DrawTriangles" Hidden="true" />
+      <Method Name="DrawZones" Hidden="true" />
+      <Method Name="DrawZones2d" Hidden="true" />
+      <Field Name="elements" Hidden="true" />
+      <Method Name="endAnimationXY" Hidden="true" />
+      <Field Name="forceScale" Hidden="true" />
+      <Method Name="getColor" Hidden="true" />
+      <Method Name="getColorStress" Hidden="true" />
+      <Method Name="getH" Hidden="true" />
+      <Method Name="getStartHeight" Hidden="true" />
+      <Method Name="getZeroZone" Hidden="true" />
+      <Method Name="grid_with_force" Hidden="true" />
+      <Method Name="ke_m_stress_for_form" Hidden="true" />
+      <Method Name="keyPressed" Hidden="true" />
+      <Field Name="line_proj" Hidden="true" />
+      <Field Name="line1" Hidden="true" />
+      <Method Name="LoadData" Hidden="true" />
+      <Method Name="make_stress_for_form" Hidden="true" />
+      <Field Name="mouseX" Hidden="true" />
+      <Field Name="mouseY" Hidden="true" />
+      <Method Name="movement_for_form" Hidden="true" />
+      <Method Name="mydiv" Hidden="true" />
+      <Field Name="nodes" Hidden="true" />
+      <Method Name="onMouseDown" Hidden="true" />
+      <Method Name="onMouseMove" Hidden="true" />
+      <Method Name="onMouseUp" Hidden="true" />
+      <Method Name="propertys_of_ke" Hidden="true" />
+      <Field Name="s" Hidden="true" />
+      <Method Name="setDrawNumberOfElement" Hidden="true" />
+      <Method Name="setDrawNumberOfNode" Hidden="true" />
+      <Method Name="setDrawNumberOfProperty" Hidden="true" />
+      <Method Name="setForceScale" Hidden="true" />
+      <Method Name="setShowBlink" Hidden="true" />
+      <Method Name="setShowBounds" Hidden="true" />
+      <Method Name="setShowForce" Hidden="true" />
+      <Method Name="setShowYellow" Hidden="true" />
+      <Method Name="setShowZones" Hidden="true" />
+      <Method Name="setType1" Hidden="true" />
+      <Method Name="setType2" Hidden="true" />
+      <Method Name="setZeroZone" Hidden="true" />
+      <Method Name="shift2d" Hidden="true" />
+      <Field Name="showBlink" Hidden="true" />
+      <Field Name="showBounds" Hidden="true" />
+      <Method Name="showCoordinates2d" Hidden="true" />
+      <Field Name="showForce" Hidden="true" />
+      <Field Name="showPoint" Hidden="true" />
+      <Field Name="showYellow" Hidden="true" />
+      <Field Name="showZones" Hidden="true" />
+      <Field Name="singlePointX" Hidden="true" />
+      <Field Name="singlePointY" Hidden="true" />
+      <Method Name="solveGJ" Hidden="true" />
+      <Method Name="startAnimationXY" Hidden="true" />
+      <Method Name="subScale" Hidden="true" />
+      <Field Name="tempX0" Hidden="true" />
+      <Field Name="tempY0" Hidden="true" />
+      <Field Name="textRenderer" Hidden="true" />
+      <Field Name="type1" Hidden="true" />
+      <Field Name="type2" Hidden="true" />
+      <Method Name="UnProject" Hidden="true" />
+      <Method Name="Update" Hidden="true" />
+      <Method Name="updateAnimation" Hidden="true" />
+      <Field Name="x0" Hidden="true" />
+      <Field Name="y0" Hidden="true" />
+      <Field Name="ZeroZone" Hidden="true" />
+    </Members>
+    <AssociationLine Name="MyCamera" Type="OpenGLNamespace.MyCamera">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.33" Y="0.06" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Animation_2D" Type="OpenGLNamespace.AnimationXY">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="1.019" Y="0.115" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Animation_3D" Type="OpenGLNamespace.Animation">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.372" Y="0.074" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Data" Type="_2d_graphics_d.Data">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.42" Y="0.57" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>4ZYKTAWAoiIQiztRGgJiEOSGqJNiUBygpfKQ5BAoYqI=</HashCode>
+      <FileName>Simulation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MyCamera" />
+      <Property Name="Animation_2D" />
+      <Property Name="Animation_3D" />
+      <Property Name="Data" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="_2d_graphics_d.Data" Collapsed="true">
+    <Position X="7.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MMAggIDEAQIiCBBQAAAQAAAAAACQBCAAgKIAgAAgAgQ=</HashCode>
+      <FileName>Data.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -28,10 +28,9 @@ namespace Remake_Model_Form
         {
             //MessageBox.Show("");
             setPictureBox();
-            this.Invalidate();
+            setPictureBox();
             //pictureBox1.Invalidate();
             //pictureBox1.Refresh();
-            form3.Update();
             //this.Refresh();
         }
 
@@ -43,7 +42,9 @@ namespace Remake_Model_Form
             // Fill with gradient 
             System.Drawing.Graphics e = pictureBox1.CreateGraphics();
             e.FillRectangle(GBrush, rect);
-          
+
+            //this.Invalidate();
+            Update();
             //pictureBox1.Refresh();
             //pictureBox1.Invalidate();
         }
@@ -115,16 +116,27 @@ namespace Remake_Model_Form
 
         private void Form3_Shown(object sender, EventArgs e)
         {
-            //setPictureBox();
+            setPictureBox();
+            setPictureBox();
             //pictureBox1.Refresh();
         }
 
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private void label1_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
         {
 
         }
